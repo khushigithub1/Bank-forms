@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bank Account Form</title>
+  <style>
+    :root {
+      --bg: #0f172a;        /* slate-900 */
+      --card: #111827;      /* gray-900 */
+      --muted: #94a3b8;     /* slate-400 */
+      --text: #e5e7eb;      /* gray-200 */
+      --accent: #22c55e;    /* green-500 */
+      --danger: #ef4444;    /* red-500 */
+      --ring: #38bdf8;      /* sky-400 */
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: linear-gradient(180deg, var(--bg), #060912); color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, 'Helvetica Neue', Arial, 'Apple Color Emoji', 'Segoe UI Emoji'; }
+    .wrap { min-height: 100svh; display: grid; place-items: center; padding: 24px; }
+    .card { width: 100%; max-width: 720px; background: radial-gradient(1200px 600px at 10% -20%, rgba(34,197,94,.12), transparent 40%),
+             radial-gradient(1000px 500px at 110% 120%, rgba(56,189,248,.10), transparent 40%),
+             var(--card);
+            border: 1px solid rgba(148,163,184,.15);
+            border-radius: 20px; padding: 28px; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+    h1 { margin: 0 0 8px; font-size: clamp(1.4rem, 2.5vw, 1.9rem); letter-spacing: .2px; }
+    p.lead { margin: 0 0 24px; color: var(--muted); font-size: .98rem; }
+
+    form { display: grid; gap: 16px; }
+    .grid { display: grid; gap: 12px; grid-template-columns: 1fr; }
+    @media (min-width: 720px){ .grid-2 { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+
+    label { display: inline-block; margin-bottom: 6px; font-size: .9rem; color: #cbd5e1; }
+    input, select, textarea { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(148,163,184,.25); background: #0b1220; color: var(--text); outline: none; transition: border .15s, box-shadow .15s; }
+    textarea { min-height: 90px; resize: vertical; }
+    input::placeholder, textarea::placeholder { color: #94a3b8; opacity: .8; }
+    input:focus, select:focus, textarea:focus { border-color: var(--ring); box-shadow: 0 0 0 4px rgba(56,189,248,.15); }
+
+    .hint { font-size: .78rem; color: var(--muted); margin-top: 6px; }
+    .error { font-size: .78rem; color: var(--danger); display: none; margin-top: 6px; }
+
+    .row { display: flex; gap: 12px; align-items: center; justify-content: space-between; }
+    .actions { display: flex; gap: 12px; justify-content: flex-end; padding-top: 8px; }
+    button { appearance: none; border: 0; padding: 12px 16px; border-radius: 12px; cursor: pointer; font-weight: 600; }
+    .btn-primary { background: var(--accent); color: #03170b; }
+    .btn-secondary { background: #0b1220; color: var(--text); border: 1px solid rgba(148,163,184,.25); }
+
+    .notice { margin-top: 6px; font-size: .8rem; color: var(--muted); }
+    .success { display: none; margin-top: 16px; padding: 12px; border-radius: 12px; background: rgba(34,197,94,.12); border: 1px solid rgba(34,197,94,.35); color: #bbf7d0; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="region" aria-labelledby="title">
+      <h1 id="title">Bank Account Details Form</h1>
+      <p class="lead">Fill in the details below. This demo validates on the client side and does not send data to a server.</p>
+
+      <form id="bankForm" novalidate>
+        <div class="grid grid-2">
+          <div>
+            <label for="fullName">Account Holder Name *</label>
+            <input id="fullName" name="fullName" type="text" required placeholder="e.g., Riya Sharma" autocomplete="name" />
+            <div class="error" id="err-fullName">Please enter your full name.</div>
+          </div>
+
+          <div>
+            <label for="accountType">Account Type *</label>
+            <select id="accountType" name="accountType" required>
+              <option value="">Select type</option>
+              <option>Savings</option>
+              <option>Current</option>
+              <option>Salary</option>
+            </select>
+            <div class="error" id="err-accountType">Please choose an account type.</div>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div>
+            <label for="accountNumber">Account Number *</label>
+            <input id="accountNumber" name="accountNumber" type="text" inputmode="numeric" pattern="^\d{9,18}$" required placeholder="9–18 digit number" />
+            <div class="hint">Digits only, between 9 and 18.</div>
+            <div class="error" id="err-accountNumber">Enter a valid account number (9–18 digits).</div>
+          </div>
+
+          <div>
+            <label for="ifsc">IFSC Code (India) *</label>
+            <input id="ifsc" name="ifsc" type="text" style="text-transform:uppercase" pattern="^[A-Z]{4}0[A-Z0-9]{6}$" required placeholder="e.g., HDFC0ABCD12" />
+            <div class="hint">Format: 4 letters + 0 + 6 alphanumeric (e.g., SBIN0XXXXXX)</div>
+            <div class="error" id="err-ifsc">Enter a valid IFSC (e.g., SBIN0XXXXXX).</div>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div>
+            <label for="bankName">Bank Name *</label>
+            <input id="bankName" name="bankName" type="text" required placeholder="e.g., State Bank of India" />
+            <div class="error" id="err-bankName">Please enter the bank name.</div>
+          </div>
+
+          <div>
+            <label for="branch">Branch</label>
+            <input id="branch" name="branch" type="text" placeholder="e.g., Andheri East" />
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div>
+            <label for="phone">Registered Mobile *</label>
+            <input id="phone" name="phone" type="tel" inputmode="numeric" pattern="^[0-9]{10}$" required placeholder="10-digit mobile number" autocomplete="tel" />
+            <div class="error" id="err-phone">Enter a valid 10-digit mobile number.</div>
+          </div>
+
+          <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" />
+          </div>
+        </div>
+
+        <div>
+          <label for="address">Address</label>
+          <textarea id="address" name="address" placeholder="House/Street, City, State, PIN"></textarea>
+        </div>
+
+        <div class="row">
+          <label style="display:flex;gap:10px;align-items:center;">
+            <input type="checkbox" id="consent" required />
+            <span>I confirm these details are correct and I consent to share them securely.</span>
+          </label>
+        </div>
+        <div class="error" id="err-consent">You must provide consent to continue.</div>
+
+        <div class="actions">
+          <button type="reset" class="btn-secondary">Reset</button>
+          <button type="submit" class="btn-primary">Submit</button>
+        </div>
+
+        <div class="success" id="success">✅ Form validated locally. (No data was sent.)</div>
+        <div class="notice">Note: This sample does not store or transmit sensitive data. For production, send via HTTPS and never log raw account numbers.</div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('bankForm');
+    const show = (el, ok) => el.style.display = ok ? 'block' : 'none';
+
+    function validateField(input, errorEl) {
+      const valid = input.checkValidity();
+      show(errorEl, !valid);
+      return valid;
+    }
+
+    // Attach real-time validation
+    const map = {
+      fullName: 'err-fullName',
+      accountType: 'err-accountType',
+      accountNumber: 'err-accountNumber',
+      ifsc: 'err-ifsc',
+      bankName: 'err-bankName',
+      phone: 'err-phone',
+      consent: 'err-consent',
+    };
+
+    Object.keys(map).forEach(id => {
+      const input = document.getElementById(id);
+      const err = document.getElementById(map[id]);
+      if (!input || !err) return;
+      input.addEventListener('input', () => validateField(input, err));
+      input.addEventListener('blur', () => validateField(input, err));
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let ok = true;
+      Object.keys(map).forEach(id => {
+        const input = document.getElementById(id);
+        const err = document.getElementById(map[id]);
+        if (input) ok = validateField(input, err) && ok;
+      });
+      const success = document.getElementById('success');
+      show(success, ok);
+      if (ok) {
+        // Example: serialize without sensitive fields being logged
+        const data = new FormData(form);
+        const payload = Object.fromEntries(data.entries());
+        console.log('Validated payload (demo):', { ...payload, accountNumber: '****', ifsc: payload.ifsc });
+      }
+    });
+  </script>
+</body>
+</html>
